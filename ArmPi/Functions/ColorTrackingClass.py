@@ -153,7 +153,7 @@ class ColorTracking():
             self.world_x, self.world_y = convertCoordinate(img_centerx, img_centery, size) #Convert to real world coordinates
         #return self.world_x, self.world_y
             self.display_info (img)
-            self.judgement(self.world_x,self.world_y,self.distance)
+            #self.judgement(self.world_x,self.world_y,self.distance)
             
             #print('finished')
         return img
@@ -198,30 +198,31 @@ class ColorTracking():
                     continue
 
 
-    def judgement(self,world_x,world_y,distance):
-        if distance < 0.5:
-                    # count += 1
-                    self.center_list.extend((world_x, world_y))
-                    # if start_count_t1:
-                    #     start_count_t1 = False
-                    t1 = time.time()
-                    if time.time() - t1 > 1:
-                        self.rotation_angle = self.rect[2] 
-                        #start_count_t1 = True
-                        self.world_X, self.world_Y = np.mean(np.array(self.center_list).reshape(count, 2), axis=0)
-                        self.center_list = []
-                        #count = 0
-                        #self.start_pick_up = True
-        else:
-            t1 = time.time()
-            start_count_t1 = True
-            self.center_list = []
-            count = 0 
+    # def judgement(self,world_x,world_y,distance):
+    #     if distance < 0.5:
+    #                 # count += 1
+    #                 self.center_list.extend((world_x, world_y))
+    #                 # if start_count_t1:
+    #                 #     start_count_t1 = False
+    #                 t1 = time.time()
+    #                 if time.time() - t1 > 1:
+    #                     self.rotation_angle = self.rect[2] 
+    #                     #start_count_t1 = True
+    #                     self.world_X, self.world_Y = np.mean(np.array(self.center_list).reshape(count, 2), axis=0)
+    #                     self.center_list = []
+    #                     #count = 0
+    #                     #self.start_pick_up = True
+    #     else:
+    #         t1 = time.time()
+    #         start_count_t1 = True
+    #         self.center_list = []
+    #         count = 0 
    
 
 ### Movement functions -- week 3
     def pick_up_block(self):
         print('started')
+        self.rotation_angle = self.rect[2] 
         Board.setBusServoPulse(1, self.servo1 - 280, 500)  #Claws open
         print('claws open')
         # Calculate the angle the gripper needs to rotate
