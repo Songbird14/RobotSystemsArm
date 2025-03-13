@@ -200,7 +200,7 @@ class ColorTracking():
 
     def judgement(self,world_x,world_y,distance):
         if distance < 0.5:
-                    count += 1
+                    # count += 1
                     center_list.extend((world_x, world_y))
                     if start_count_t1:
                         start_count_t1 = False
