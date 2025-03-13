@@ -118,11 +118,16 @@ class ColorTracking():
             img = self.my_camera.frame
             if img is not None:
                 frame = img.copy()
-                Frame = self.process_image(frame)  ###### figure out what          
+                Frame = self.process_image(frame)        
                 cv2.imshow('Frame', Frame)
                 key = cv2.waitKey(1)
                 if key == 27:
                     break
+                if self.world_x != 0 and self.world_y != 0:
+                    self.pick_up_block()
+                    self.find_where_block_goes()
+                    self.put_down_block()
+                    
         self.my_camera.camera_close()
         cv2.destroyAllWindows()
 
@@ -151,11 +156,9 @@ class ColorTracking():
 
             img_centerx, img_centery = getCenter(rect, roi, size, square_length)  #Get the center coordinates of the wooden block
             self.world_x, self.world_y = convertCoordinate(img_centerx, img_centery, size) #Convert to real world coordinates
-        #return self.world_x, self.world_y
+
             self.display_info (img)
             #self.judgement(self.world_x,self.world_y,self.distance)
-            
-            #print('finished')
         return img
         
     def display_info(self,img):
@@ -175,7 +178,7 @@ class ColorTracking():
         #self.distance = math.sqrt(pow(self.world_x - self.last_x, 2) + pow(self.world_y - self.last_y, 2)) #Compare the last coordinates to determine whether to move
         #self.last_x, self.last_y = self.world_x, self.world_y
     
-    def pick_block_to_get (self,frame_lab ):
+    def pick_block_to_get (self,frame_lab):
         self.best_contour = None
         self.best_c_area = 0
         self.selected_color = None
