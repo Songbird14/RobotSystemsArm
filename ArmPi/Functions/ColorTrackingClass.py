@@ -228,7 +228,8 @@ class ColorTracking():
         print('started')
         self.world_X = self.world_x
         self.world_Y = self.world_y
-        self.rotation_angle = self.rect[2] 
+        #self.rotation_angle = self.rect[2] 
+        self.rotation_angle = 0
         Board.setBusServoPulse(1, self.servo1 - 280, 500)  #Claws open
         print('claws open')
         # Calculate the angle the gripper needs to rotate
