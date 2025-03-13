@@ -143,7 +143,7 @@ class ColorTracking():
             img_centerx, img_centery = getCenter(rect, roi, size, square_length)  #Get the center coordinates of the wooden block
             self.world_x, self.world_y = convertCoordinate(img_centerx, img_centery, size) #Convert to real world coordinates
         #return self.world_x, self.world_y
-        self.display_info (img)
+            self.display_info (img)
         
     def display_info(self,img):
         #draw box on the screen and display found color on screen 
