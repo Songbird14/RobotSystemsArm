@@ -134,7 +134,7 @@ class ColorTracking():
         areaMaxContour = 0
         self.pick_block_to_get(frame_lab) #Find the maximum contourFind the maximum contour
         if self.best_c_area > 2500:  # The maximum area has been found
-            rect = cv2.minAreaRect(areaMaxContour)
+            rect = cv2.minAreaRect(self.areaMaxContour)
             self.box = np.int0(cv2.boxPoints(rect))
 
             roi = getROI(self.box) #get the ROI area
