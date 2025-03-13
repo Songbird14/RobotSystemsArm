@@ -129,12 +129,10 @@ class ColorTracking():
             #frame_gb = getMaskROI(frame_gb, roi, size)  #################  
         
         frame_lab = cv2.cvtColor(frame_gb, cv2.COLOR_BGR2LAB)  #Covert the image to LAB space
-        
-        area_max = 0
-        areaMaxContour = 0
         self.pick_block_to_get(frame_lab) #Find the maximum contourFind the maximum contour
+
         if self.best_c_area > 2500:  # The maximum area has been found
-            rect = cv2.minAreaRect(self.best_c_area)
+            rect = cv2.minAreaRect(self.best_contour)
             self.box = np.int0(cv2.boxPoints(rect))
 
             roi = getROI(self.box) #get the ROI area
@@ -143,7 +141,7 @@ class ColorTracking():
             img_centerx, img_centery = getCenter(rect, roi, size, square_length)  #Get the center coordinates of the wooden block
             self.world_x, self.world_y = convertCoordinate(img_centerx, img_centery, size) #Convert to real world coordinates
         #return self.world_x, self.world_y
-            self.display_info (img)
+            #self.display_info (img)
             print('finished')
         return img
         
