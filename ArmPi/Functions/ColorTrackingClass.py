@@ -150,7 +150,8 @@ class ColorTracking():
 
             img_centerx, img_centery = getCenter(rect, roi, size, square_length)  #Get the center coordinates of the wooden block
             self.world_x, self.world_y = convertCoordinate(img_centerx, img_centery, size) #Convert to real world coordinates
-        return self.world_x, self.world_y
+        #return self.world_x, self.world_y
+        self.display_info (img)
         
     def display_info(self,img):
         #draw box on the screen and display found color on screen 
@@ -161,8 +162,8 @@ class ColorTracking():
         cv2.putText(img, "Color: " + detect_color, (10, img.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.65, draw_color, 2)
         cv2.putText(img, '(' + str(self.world_x) + ',' + str(self.world_y) + ')', (min(box[0, 0], box[2, 0]), box[2, 1] - 10),
         cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.range_rgb[detect_color], 1) #draw center point
-        #distance = math.sqrt(pow(world_x - last_x, 2) + pow(world_y - last_y, 2)) #Compare the last coordinates to determine whether to move
-        #last_x, last_y = world_x, world_y
+        distance = math.sqrt(pow(self.world_x - last_x, 2) + pow(self.world_y - last_y, 2)) #Compare the last coordinates to determine whether to move
+        last_x, last_y = self.world_x, self.world_y
     
     def judgement(self,world_x,world_y,distance):
         if distance < 0.5:
