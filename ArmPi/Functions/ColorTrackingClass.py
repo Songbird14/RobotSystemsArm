@@ -119,10 +119,6 @@ class ColorTracking():
         img_h, img_w = img.shape[:2]
         cv2.line(img, (0, int(img_h / 2)), (img_w, int(img_h / 2)), (0, 0, 200), 1)
         cv2.line(img, (int(img_w / 2), 0), (int(img_w / 2), img_h), (0, 0, 200), 1)
-
-        return img
-
-    def photo_2_realWorld(self,img):
         color = self.color
         size = self.size
         frame_resize = cv2.resize(img, size, interpolation=cv2.INTER_NEAREST)
