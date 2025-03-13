@@ -124,6 +124,7 @@ class ColorTracking():
                 if key == 27:
                     break
                 if self.world_X != 0 and self.world_Y != 0:
+                    print('found coordinates')
                     self.pick_up_block()
                     self.find_where_block_goes()
                     self.put_down_block()
