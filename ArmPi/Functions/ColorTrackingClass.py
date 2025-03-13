@@ -141,7 +141,7 @@ class ColorTracking():
         opened = cv2.morphologyEx(frame_mask, cv2.MORPH_OPEN, np.ones((6, 6), np.uint8))  # Open operation
         closed = cv2.morphologyEx(opened, cv2.MORPH_CLOSE, np.ones((6, 6), np.uint8))  # Closed operation
         contours = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[-2]  #Find the outline
-        areaMaxContour, area_max = getAreaMaxContour(contours)  #Find the maximum contourFind the maximum contour
+        areaMaxContour, area_max = self.getAreaMaxContouretAreaMaxContour(contours)  #Find the maximum contourFind the maximum contour
         if area_max > 2500:  # The maximum area has been found
             rect = cv2.minAreaRect(areaMaxContour)
             self.box = np.int0(cv2.boxPoints(rect))
