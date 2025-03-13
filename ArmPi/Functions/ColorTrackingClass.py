@@ -226,6 +226,8 @@ class ColorTracking():
 ### Movement functions -- week 3
     def pick_up_block(self):
         print('started')
+        self.world_X = self.world_x
+        self.world_Y = self.world_y
         self.rotation_angle = self.rect[2] 
         Board.setBusServoPulse(1, self.servo1 - 280, 500)  #Claws open
         print('claws open')
