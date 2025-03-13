@@ -214,6 +214,7 @@ class ColorTracking():
 
 ### Movement functions -- week 3
     def pick_up_block(self):
+        print('started')
         Board.setBusServoPulse(1, self.servo1 - 280, 500)  #Claws open
         print('claws open')
         # Calculate the angle the gripper needs to rotate
