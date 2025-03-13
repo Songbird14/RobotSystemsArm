@@ -25,6 +25,7 @@ class ColorTracking():
         #self.__target_color = ('red')
         self.my_camera = Camera.Camera()
         self.my_camera.camera_open()
+        
         self.range_rgb = {
     'red': (0, 0, 255),
     'blue': (255, 0, 0),
@@ -55,6 +56,7 @@ class ColorTracking():
         self.start_pick_up = False
         self.start_count_t1 = True
         self.color = 0
+        self.last_x, self.last_y = 0, 0
 
         self.AK = ArmIK()
         self.servo1 = 500
