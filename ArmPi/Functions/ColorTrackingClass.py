@@ -202,9 +202,9 @@ class ColorTracking():
         if distance < 0.5:
                     # count += 1
                     self.center_list.extend((world_x, world_y))
-                    if start_count_t1:
-                        start_count_t1 = False
-                        t1 = time.time()
+                    # if start_count_t1:
+                    #     start_count_t1 = False
+                    #     t1 = time.time()
                     if time.time() - t1 > 1:
                         self.rotation_angle = self.rect[2] 
                         start_count_t1 = True
