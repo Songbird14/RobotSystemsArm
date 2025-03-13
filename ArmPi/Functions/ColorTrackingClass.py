@@ -119,7 +119,7 @@ class ColorTracking():
             if img is not None:
                 frame = img.copy()
                 Frame = self.process_image(frame) 
-                if self.world_X != 0 and self.world_Y != 0:
+                if self.world_x != 0 and self.world_y != 0:
                     print('found coordinates')
                     self.pick_up_block()
                     self.find_where_block_goes()
