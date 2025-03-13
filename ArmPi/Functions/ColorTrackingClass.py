@@ -148,7 +148,7 @@ class ColorTracking():
     def display_info(self,img):
         #draw box on the screen and display found color on screen 
         box = self.box
-        detect_color = self.color
+        detect_color = self.selected_color
         
         cv2.drawContours(img, [box], -1, self.range_rgb[detect_color], 2)
         cv2.putText(img, "Color: " + detect_color, (10, img.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.65, draw_color, 2)
