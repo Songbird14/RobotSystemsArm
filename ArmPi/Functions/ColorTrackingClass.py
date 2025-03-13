@@ -119,13 +119,12 @@ class ColorTracking():
             if img is not None:
                 frame = img.copy()
                 Frame = self.process_image(frame) 
+                cv2.imshow('Frame', Frame)
                 if self.world_x != 0 and self.world_y != 0:
                     print('found coordinates')
                     self.pick_up_block()
                     self.find_where_block_goes()
                     self.put_down_block()
-       
-                cv2.imshow('Frame', Frame)
                 key = cv2.waitKey(1)
                 if key == 27:
                     break
@@ -221,15 +220,16 @@ class ColorTracking():
             start_count_t1 = True
             self.center_list = []
             count = 0 
+            self.world_X = self.world_x
+            self.world_Y = self.world_y
    
 
 ### Movement functions -- week 3
     def pick_up_block(self):
         print('started')
-        self.world_X = self.world_x
-        self.world_Y = self.world_y
+        self.judgement(self.world_x,self.world_y,self.distance)
         #self.rotation_angle = self.rect[2] 
-        self.rotation_angle = 0
+        #self.rotation_angle = 0
         Board.setBusServoPulse(1, self.servo1 - 280, 500)  #Claws open
         print('claws open')
         # Calculate the angle the gripper needs to rotate
@@ -270,14 +270,10 @@ class ColorTracking():
         self.AK.setPitchRangeMoving((self.coordinate[self.selected_color][0], self.coordinate[self.selected_color][1], self.coordinate[self.selected_color][2] + 3), -90, -90, 0, 500)
         time.sleep(0.5)
         
-        # if not __isRunning:
-        #     continue
-        #self.AK.setPitchRangeMoving((self.coordinate[detect_color]), -90, -90, 0, 1000)
+    
         self.AK.setPitchRangeMoving((self.coordinate[self.selected_color]), -90, -90, 0, 1000)
         time.sleep(0.8)
         
-        # if not __isRunning:
-        #     continue
     def initMove(self):
         Board.setBusServoPulse(1, self.servo1 - 50, 300)
         Board.setBusServoPulse(2, 500, 500)
