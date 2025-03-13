@@ -124,9 +124,9 @@ class ColorTracking():
         frame_resize = cv2.resize(img, size, interpolation=cv2.INTER_NEAREST)
         frame_gb = cv2.GaussianBlur(frame_resize, (11, 11), 11)
         #f an object is detected in a certain area, the area will be detected until there is no object.
-        if self.get_roi and self.start_pick_up:
-            get_roi = False
-            frame_gb = getMaskROI(frame_gb, roi, size)  #################  
+        # if self.get_roi and self.start_pick_up:
+        #     get_roi = False
+            #frame_gb = getMaskROI(frame_gb, roi, size)  #################  
         
         frame_lab = cv2.cvtColor(frame_gb, cv2.COLOR_BGR2LAB)  #Covert the image to LAB space
         
