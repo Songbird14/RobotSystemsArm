@@ -5,19 +5,15 @@ import ColorTrackingClass
 
 ctc = ColorTrackingClass.ColorTracking()
 
-def percetion ():
-    imag = ctc.find_color_block()
+imag = ctc.find_color_block()
 
-    processedImg = ctc.process_image(imag)
+processedImg = ctc.process_image(imag)
 
-    world_x,world_y = ctc.photo_2_realWorld(processedImg)
+world_x,world_y = ctc.photo_2_realWorld(processedImg)
 
-    ctc.display_info(processedImg)
-
-    return processedImg
+ctc.display_info(processedImg)
     
-
-Frame = percetion()
+    
 
 
 
