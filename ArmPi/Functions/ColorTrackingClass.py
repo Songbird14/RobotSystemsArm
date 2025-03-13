@@ -267,7 +267,7 @@ class ColorTracking():
         # if not __isRunning:
         #     continue
         #self.AK.setPitchRangeMoving((self.coordinate[detect_color][0], self.coordinate[detect_color][1], self.AKcoordinate[detect_color][2] + 3), -90, -90, 0, 500)
-        self.AK.setPitchRangeMoving((self.coordinate[self.selected_color][0], self.coordinate[self.selected_color][1], self.AK.coordinate[self.selected_color][2] + 3), -90, -90, 0, 500)
+        self.AK.setPitchRangeMoving((self.coordinate[self.selected_color][0], self.coordinate[self.selected_color][1], self.coordinate[self.selected_color][2] + 3), -90, -90, 0, 500)
         time.sleep(0.5)
         
         # if not __isRunning:
