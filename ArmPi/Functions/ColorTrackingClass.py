@@ -145,7 +145,7 @@ class ColorTracking():
         #return self.world_x, self.world_y
             self.display_info (img)
             print('finished')
-            return img
+        return img
         
     def display_info(self,img):
         #draw box on the screen and display found color on screen 
