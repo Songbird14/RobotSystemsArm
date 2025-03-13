@@ -11,7 +11,7 @@ from ArmIK.Transform import *
 from ArmIK.ArmMoveIK import *
 import HiwonderSDK.Board as Board
 from CameraCalibration.CalibrationConfig import *
-import numpy as np
+# import numpy as np
 
 if sys.version_info.major == 2:
     print('Please run this program with python3!')
@@ -22,7 +22,7 @@ class ColorTracking():
     
     def __init__(self):
         #__target_color = ('red', 'green', 'blue')
-        self._target_color = ('red')
+        self.__target_color = ('red')
         self.my_camera = Camera.Camera()
         self.my_camera.camera_open()
         self.range_rgb = {
@@ -133,16 +133,14 @@ class ColorTracking():
         area_max = 0
         areaMaxContour = 0
        
-        # for i in color_range:
-        #     if i in self.__target_color:
-                #detect_color = i
-        detect_color = self._target_color
-        frame_mask = cv2.inRange(frame_lab, color_range[detect_color][0], color_range[detect_color][1])  # Perform bitwise operations on the original image and mask
-        opened = cv2.morphologyEx(frame_mask, cv2.MORPH_OPEN, np.ones((6, 6), np.uint8))  # Open operation
-        closed = cv2.morphologyEx(opened, cv2.MORPH_CLOSE, np.ones((6, 6), np.uint8))  # Closed operation
-        contours = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[-2]  #Find the outline
-        print(contours)
-        areaMaxContour, area_max = self.getAreaMaxContour(contours)  #Find the maximum contourFind the maximum contour
+        for i in color_range:
+            if i in self.__target_color:
+                detect_color = i
+                frame_mask = cv2.inRange(frame_lab, color_range[detect_color][0], color_range[detect_color][1])  # Perform bitwise operations on the original image and mask
+                opened = cv2.morphologyEx(frame_mask, cv2.MORPH_OPEN, np.ones((6, 6), np.uint8))  # Open operation
+                closed = cv2.morphologyEx(opened, cv2.MORPH_CLOSE, np.ones((6, 6), np.uint8))  # Closed operation
+                contours = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[-2]  #Find the outline
+                areaMaxContour, area_max = self.getAreaMaxContour(contours)  #Find the maximum contourFind the maximum contour
         if area_max > 2500:  # The maximum area has been found
             rect = cv2.minAreaRect(areaMaxContour)
             self.box = np.int0(cv2.boxPoints(rect))
