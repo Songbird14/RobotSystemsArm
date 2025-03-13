@@ -120,15 +120,15 @@ class ColorTracking():
                 frame = img.copy()
                 Frame = self.process_image(frame)        
                 cv2.imshow('Frame', Frame)
-                key = cv2.waitKey(1)
-                if key == 27:
-                    break
                 if self.world_X != 0 and self.world_Y != 0:
                     print('found coordinates')
                     self.pick_up_block()
                     self.find_where_block_goes()
                     self.put_down_block()
 
+                key = cv2.waitKey(1)
+                if key == 27:
+                    break
         self.my_camera.camera_close()
         cv2.destroyAllWindows()
 
