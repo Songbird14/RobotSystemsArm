@@ -132,16 +132,8 @@ class ColorTracking():
         
         area_max = 0
         areaMaxContour = 0
-       
-        for i in color_range:
-            if i in self.__target_color:
-                detect_color = i
-                frame_mask = cv2.inRange(frame_lab, color_range[detect_color][0], color_range[detect_color][1])  # Perform bitwise operations on the original image and mask
-                opened = cv2.morphologyEx(frame_mask, cv2.MORPH_OPEN, np.ones((6, 6), np.uint8))  # Open operation
-                closed = cv2.morphologyEx(opened, cv2.MORPH_CLOSE, np.ones((6, 6), np.uint8))  # Closed operation
-                contours = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[-2]  #Find the outline
-                areaMaxContour, area_max = self.getAreaMaxContour(contours)  #Find the maximum contourFind the maximum contour
-        if area_max > 2500:  # The maximum area has been found
+        self.pick_block_to_get(frame_lab) #Find the maximum contourFind the maximum contour
+        if self.best_c_area > 2500:  # The maximum area has been found
             rect = cv2.minAreaRect(areaMaxContour)
             self.box = np.int0(cv2.boxPoints(rect))
 
@@ -165,6 +157,29 @@ class ColorTracking():
         distance = math.sqrt(pow(self.world_x - last_x, 2) + pow(self.world_y - last_y, 2)) #Compare the last coordinates to determine whether to move
         last_x, last_y = self.world_x, self.world_y
     
+    def pick_block_to_get (self,frame_lab ):
+        self.best_contour = None
+        self.best_c_area = 0
+        self.selected_color = None
+
+        for i in color_range:
+            if i in self.__target_color:
+                detect_color = i
+                frame_mask = cv2.inRange(frame_lab, color_range[detect_color][0], color_range[detect_color][1])  # Perform bitwise operations on the original image and mask
+                opened = cv2.morphologyEx(frame_mask, cv2.MORPH_OPEN, np.ones((6, 6), np.uint8))  # Open operation
+                closed = cv2.morphologyEx(opened, cv2.MORPH_CLOSE, np.ones((6, 6), np.uint8))  # Closed operation
+                contours = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[-2]  #Find the outline
+                try: 
+                    largestC = max(contours, key = cv2.contourArea)
+                    largestArea = cv2.contourArea(largestC)
+                    if largestArea > self.best_c_area:
+                        self.best_contour = largestC
+                        self.best_c_area = largestArea
+                        self.selected_color = i
+                except:
+                    continue
+
+
     def judgement(self,world_x,world_y,distance):
         if distance < 0.5:
                     count += 1
