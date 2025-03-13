@@ -21,7 +21,7 @@ if sys.version_info.major == 2:
 class ColorTracking(): 
     
     def __init__(self):
-        __target_color = ('red', 'green', 'blue')
+        self.__target_color = ('red', 'green', 'blue')
         #self.__target_color = ('red')
         self.my_camera = Camera.Camera()
         self.my_camera.camera_open()
