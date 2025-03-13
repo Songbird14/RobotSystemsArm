@@ -172,7 +172,7 @@ class ColorTracking():
         print(self.last_x)
         print(self.last_y)
 
-        self.distance = math.sqrt(pow(self.world_x - self.last_x, 2) + pow(self.world_y - self,self.last_y, 2)) #Compare the last coordinates to determine whether to move
+        self.distance = math.sqrt(pow(self.world_x - self.last_x, 2) + pow(self.world_y - self.last_y, 2)) #Compare the last coordinates to determine whether to move
         self.last_x, self.last_y = self.world_x, self.world_y
     
     def pick_block_to_get (self,frame_lab ):
