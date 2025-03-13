@@ -123,11 +123,11 @@ class ColorTracking():
                 key = cv2.waitKey(1)
                 if key == 27:
                     break
-                if self.world_x != 0 and self.world_y != 0:
+                if self.world_X != 0 and self.world_Y != 0:
                     self.pick_up_block()
                     self.find_where_block_goes()
                     self.put_down_block()
-                    
+
         self.my_camera.camera_close()
         cv2.destroyAllWindows()
 
