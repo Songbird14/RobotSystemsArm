@@ -11,6 +11,7 @@ from ArmIK.Transform import *
 from ArmIK.ArmMoveIK import *
 import HiwonderSDK.Board as Board
 from CameraCalibration.CalibrationConfig import *
+# import numpy as np
 
 if sys.version_info.major == 2:
     print('Please run this program with python3!')
@@ -20,7 +21,8 @@ if sys.version_info.major == 2:
 class ColorTracking(): 
     
     def __init__(self):
-        __target_color = ('red', 'green', 'blue')
+        self.__target_color = ('red', 'green', 'blue')
+        #self.__target_color = ('red')
         self.my_camera = Camera.Camera()
         self.my_camera.camera_open()
         self.range_rgb = {
@@ -35,44 +37,43 @@ class ColorTracking():
         'green': (-15 + 0.5, 6 - 0.5,  1.5),
         'blue':  (-15 + 0.5, 0 - 0.5,  1.5),
     }
+        self.rect = None
+        self.size = (640, 480)
+        self.rotation_angle = 0
+        self.unreachable = False
+        self.world_X, self.world_Y = 0, 0
+        self.world_x, self.world_y = 0, 0
+        self.count = 0
+        self.track = False
+        self._stop = False
+        self.get_roi = False
+        self.center_list = []
+        self.first_move = True
+        self.__isRunning = False
+        self.detect_color = 'None'
+        self.action_finish = True
+        self.start_pick_up = False
+        self.start_count_t1 = True
+        self.color = 0
 
-    AK = ArmIK()
-    global roi
-    global rect
-    global count
-    global track
-    global get_roi
-    global center_list
-    global __isRunning
-    global unreachable
-    global detect_color
-    global action_finish
-    global rotation_angle
-    global last_x, last_y
-    global world_X, world_Y
-    global world_x, world_y
-    global start_count_t1, t1
-    global start_pick_up, first_move
+        self.AK = ArmIK()
+        self.servo1 = 500
+        self.coordinate = {
+        'red':   (-15 + 0.5, 12 - 0.5, 1.5),
+        'green': (-15 + 0.5, 6 - 0.5,  1.5),
+        'blue':  (-15 + 0.5, 0 - 0.5,  1.5),
+    }
 
-    rect = None
-    size = (640, 480)
-    rotation_angle = 0
-    unreachable = False
-    world_X, world_Y = 0, 0
-    world_x, world_y = 0, 0
-    count = 0
-    track = False
-    _stop = False
-    get_roi = False
-    center_list = []
-    first_move = True
-    __isRunning = False
-    detect_color = 'None'
-    action_finish = True
-    start_pick_up = False
-    start_count_t1 = True
 
-   
+        
+        # global roi
+        # global rect
+        # global unreachable
+        # global last_x, last_y
+        # global world_X, world_Y
+        # global world_x, world_y
+        # global start_count_t1, t1
+        # global start_pick_up, first_move
     
     def set_RGB_val(self):
         if color == "red":
@@ -107,99 +108,9 @@ class ColorTracking():
 
         return area_max_contour, contour_area_max  # Return the largest contour
 
-    def reset():
-        global count
-        global track
-        global _stop
-        global get_roi
-        global first_move
-        global center_list
-        global __isRunning
-        global detect_color
-        global action_finish
-        global start_pick_up
-        global __target_color
-        global start_count_t1
-    
-        
-        count = 0
-        _stop = False
-        track = False
-        get_roi = False
-        center_list = []
-        first_move = True
-        __target_color = ()
-        detect_color = 'None'
-        action_finish = True
-        start_pick_up = False
-        start_count_t1 = True
-
-
-# ### Motion functions -- week 3
-#     def move_arm (self):
-#         pass
-
-#     def check_if_successful(self):
-#         pass
-    
-#     def check_if_block_moved(self):
-#         pass
-
-    def pick_up_block (self):
-        
-
-    def open_claw(self):
-        Board.setBusServoPulse(1, servo1 - 280, 500)  #Claws open
-        # Calculate the angle the gripper needs to rotate
-        servo2_angle = getAngle(world_X, world_Y, rotation_angle)
-        Board.setBusServoPulse(2, servo2_angle, 500)
-        time.sleep(0.8)
-
-    def close_claw(self):
-        Board.setBusServoPulse(1, servo1, 500)  # Gripper closed
-        time.sleep(1)
-
-#     def move_arm_up(self):
-        Board.setBusServoPulse(2, 500, 500)
-        AK.setPitchRangeMoving((world_X, world_Y, 12), -90, -90, 0, 1000)  # Robotic arm raised
-        time.sleep(1)
-
-    def block_placement(self):
-        coordinate = self.coordinate
-        result = AK.setPitchRangeMoving((coordinate[detect_color][0], coordinate[detect_color][1], 12), -90, -90, 0)   
-        time.sleep(result[2]/1000)
-        
-        # if not __isRunning:
-        #     continue
-        servo2_angle = getAngle(coordinate[detect_color][0], coordinate[detect_color][1], -90)
-        Board.setBusServoPulse(2, servo2_angle, 500)
-        time.sleep(0.5)
-
-        # if not __isRunning:
-        #     continue
-        AK.setPitchRangeMoving((coordinate[detect_color][0], coordinate[detect_color][1], coordinate[detect_color][2] + 3), -90, -90, 0, 500)
-        time.sleep(0.5)
-        
-        # if not __isRunning:
-        #     continue
-        AK.setPitchRangeMoving((coordinate[detect_color]), -90, -90, 0, 1000)
-        time.sleep(0.8)
-
-    def home(self): 
-        Board.setBusServoPulse(1, servo1 - 50, 300)
-        Board.setBusServoPulse(2, 500, 500)
-        AK.setPitchRangeMoving((0, 10, 10), -30, -30, -90, 1500)
-
-        time.sleep(1.5)
-
-        detect_color = 'None'
-        first_move = True
-        get_roi = False
-        action_finish = True
-        start_pick_up = False
-        #set_rgb(detect_color)
-
+   
 ### Perception functions -- week 2
+
     def find_color_block(self):
         while True:
             img = self.my_camera.frame
@@ -253,8 +164,8 @@ class ColorTracking():
         cv2.putText(img, "Color: " + detect_color, (10, img.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.65, self.range_rgb[detect_color], 2)
         cv2.putText(img, '(' + str(self.world_x) + ',' + str(self.world_y) + ')', (min(box[0, 0], box[2, 0]), box[2, 1] - 10),
         cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.range_rgb[detect_color], 1) #draw center point
-        # distance = math.sqrt(pow(self.world_x - last_x, 2) + pow(self.world_y - last_y, 2)) #Compare the last coordinates to determine whether to move
-        # last_x, last_y = self.world_x, self.world_y
+        self.distance = math.sqrt(pow(self.world_x - last_x, 2) + pow(self.world_y - last_y, 2)) #Compare the last coordinates to determine whether to move
+        self.last_x, self.last_y = self.world_x, self.world_y
     
     def pick_block_to_get (self,frame_lab ):
         self.best_contour = None
@@ -287,7 +198,7 @@ class ColorTracking():
                         start_count_t1 = False
                         t1 = time.time()
                     if time.time() - t1 > 1:
-                        rotation_angle = self.rect[2] 
+                        self.rotation_angle = self.rect[2] 
                         start_count_t1 = True
                         self.world_X, self.world_Y = np.mean(np.array(center_list).reshape(count, 2), axis=0)
                         center_list = []
@@ -300,4 +211,3 @@ class ColorTracking():
             count = 0 
    
 
-   

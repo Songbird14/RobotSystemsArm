@@ -57,6 +57,15 @@ class ColorTracking():
         self.color = 0
 
         self.AK = ArmIK()
+        self.servo1 = 500
+        self.coordinate = {
+        'red':   (-15 + 0.5, 12 - 0.5, 1.5),
+        'green': (-15 + 0.5, 6 - 0.5,  1.5),
+        'blue':  (-15 + 0.5, 0 - 0.5,  1.5),
+    }
+
+
+        
         # global roi
         # global rect
         # global unreachable
@@ -142,6 +151,7 @@ class ColorTracking():
             self.world_x, self.world_y = convertCoordinate(img_centerx, img_centery, size) #Convert to real world coordinates
         #return self.world_x, self.world_y
             self.display_info (img)
+            self.judgement(self.world_x,self.world_y,self.distance)
             
             #print('finished')
         return img
@@ -155,8 +165,8 @@ class ColorTracking():
         cv2.putText(img, "Color: " + detect_color, (10, img.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.65, self.range_rgb[detect_color], 2)
         cv2.putText(img, '(' + str(self.world_x) + ',' + str(self.world_y) + ')', (min(box[0, 0], box[2, 0]), box[2, 1] - 10),
         cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.range_rgb[detect_color], 1) #draw center point
-        # distance = math.sqrt(pow(self.world_x - last_x, 2) + pow(self.world_y - last_y, 2)) #Compare the last coordinates to determine whether to move
-        # last_x, last_y = self.world_x, self.world_y
+        self.distance = math.sqrt(pow(self.world_x - last_x, 2) + pow(self.world_y - last_y, 2)) #Compare the last coordinates to determine whether to move
+        self.last_x, self.last_y = self.world_x, self.world_y
     
     def pick_block_to_get (self,frame_lab ):
         self.best_contour = None
@@ -189,7 +199,7 @@ class ColorTracking():
                         start_count_t1 = False
                         t1 = time.time()
                     if time.time() - t1 > 1:
-                        rotation_angle = self.rect[2] 
+                        self.rotation_angle = self.rect[2] 
                         start_count_t1 = True
                         self.world_X, self.world_Y = np.mean(np.array(center_list).reshape(count, 2), axis=0)
                         center_list = []
@@ -201,3 +211,78 @@ class ColorTracking():
             center_list = []
             count = 0 
    
+
+### Movement functions -- week 3
+    def pick_up_block(self):
+        Board.setBusServoPulse(1, self.servo1 - 280, 500)  #Claws open
+        # Calculate the angle the gripper needs to rotate
+        servo2_angle = getAngle(self.world_X, self.world_Y, self.rotation_angle)
+        Board.setBusServoPulse(2, servo2_angle, 500)
+        time.sleep(0.8)
+        # if not __isRunning:
+        #     continue
+        self.AK.setPitchRangeMoving((self.world_X, self.world_Y, 2), -90, -90, 0, 1000)  #lower height
+        time.sleep(2)
+        # if not __isRunning:
+        #     continue
+        Board.setBusServoPulse(1, self.servo1, 500)  # Gripper closed
+        time.sleep(1)
+        # if not __isRunning:
+        #     continue
+        Board.setBusServoPulse(2, 500, 500)
+        self.AK.setPitchRangeMoving((self.world_X, self.world_Y, 12), -90, -90, 0, 1000)  # Robotic arm raised
+        time.sleep(1)
+    
+
+    def find_where_block_goes (self):
+        #result = self.AK.setPitchRangeMoving((self.coordinate[detect_color][0], self.coordinate[detect_color][1], 12), -90, -90, 0)
+        result = self.AK.setPitchRangeMoving((self.coordinate[self.selected_color][0], self.coordinate[self.selected_color][1], 12), -90, -90, 0)   
+        time.sleep(result[2]/1000)
+        
+        # if not __isRunning:
+        #     continue
+        #servo2_angle = getAngle(self.coordinate[detect_color][0], self.coordinate[detect_color][1], -90)
+        servo2_angle = getAngle(self.coordinate[self.selected_color][0], self.coordinate[self.selected_color][1], -90)
+        Board.setBusServoPulse(2, servo2_angle, 500)
+        time.sleep(0.5)
+
+        # if not __isRunning:
+        #     continue
+        #self.AK.setPitchRangeMoving((self.coordinate[detect_color][0], self.coordinate[detect_color][1], self.AKcoordinate[detect_color][2] + 3), -90, -90, 0, 500)
+        self.AK.setPitchRangeMoving((self.coordinate[self.selected_color][0], self.coordinate[self.selected_color][1], self.AKcoordinate[self.selected_color][2] + 3), -90, -90, 0, 500)
+        time.sleep(0.5)
+        
+        # if not __isRunning:
+        #     continue
+        #self.AK.setPitchRangeMoving((self.coordinate[detect_color]), -90, -90, 0, 1000)
+        self.AK.setPitchRangeMoving((self.coordinate[self.selected_color]), -90, -90, 0, 1000)
+        time.sleep(0.8)
+        
+        # if not __isRunning:
+        #     continue
+    def initMove(self):
+        Board.setBusServoPulse(1, self.servo1 - 50, 300)
+        Board.setBusServoPulse(2, 500, 500)
+        self.AK.setPitchRangeMoving((0, 10, 10), -30, -30, -90, 1500)
+
+
+    def put_down_block(self):
+        Board.setBusServoPulse(1, self.servo1 - 200, 500)  #Open the claws and put the object down
+        time.sleep(0.8)
+        
+        # if not __isRunning:
+        #     continue                    
+        #self.AK.setPitchRangeMoving((self.coordinate[detect_color][0], self.coordinate[detect_color][1], 12), -90, -90, 0, 800)
+        self.AK.setPitchRangeMoving((self.coordinate[detect_color][0], self.coordinate[detect_color][1], 12), -90, -90, 0, 800)
+        time.sleep(0.8)
+
+        self.initMove()  # Return to intial position
+        time.sleep(1.5)
+
+        detect_color = 'None'
+        first_move = True
+        get_roi = False
+        action_finish = True
+        start_pick_up = False
+        self.set_rgb(detect_color)
+    

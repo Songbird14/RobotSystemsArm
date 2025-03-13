@@ -9,6 +9,10 @@ imag = ctc.find_color_block()
 
 ctc.display_info(imag)
     
+
+### movement 
+
+ctc.pick_up_block()
     
 
 
