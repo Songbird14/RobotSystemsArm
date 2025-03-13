@@ -302,5 +302,6 @@ class ColorTracking():
         get_roi = False
         action_finish = True
         start_pick_up = False
-        self.set_rgb(detect_color)
+        self.world_x = 0 
+        self.world_y = 0
     
