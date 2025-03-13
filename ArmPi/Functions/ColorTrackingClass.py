@@ -227,6 +227,8 @@ class ColorTracking():
 ### Movement functions -- week 3
     def pick_up_block(self):
         print('started')
+        self.world_X = self.world_x
+        self.world_Y = self.world_y
         #self.judgement(self.world_x,self.world_y,self.distance)
         #self.rotation_angle = self.rect[2] 
         #self.rotation_angle = 0
