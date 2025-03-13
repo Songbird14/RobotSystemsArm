@@ -56,7 +56,7 @@ class ColorTracking():
         self.start_pick_up = False
         self.start_count_t1 = True
         self.color = 0
-        self.last_x, self.last_y = 0, 0
+        self.last_x, self.last_y = 0.00, 0.00
 
         self.AK = ArmIK()
         self.servo1 = 500
