@@ -11,7 +11,7 @@ from ArmIK.Transform import *
 from ArmIK.ArmMoveIK import *
 import HiwonderSDK.Board as Board
 from CameraCalibration.CalibrationConfig import *
-# import numpy as np
+
 
 if sys.version_info.major == 2:
     print('Please run this program with python3!')
@@ -65,33 +65,6 @@ class ColorTracking():
     }
 
 
-        
-        # global roi
-        # global rect
-        # global unreachable
-        # global last_x, last_y
-        # global world_X, world_Y
-        # global world_x, world_y
-        # global start_count_t1, t1
-        # global start_pick_up, first_move
-    
-    def set_RGB_val(self):
-        if color == "red":
-            Board.RGB.setPixelColor(0, Board.PixelColor(255, 0, 0))
-            Board.RGB.setPixelColor(1, Board.PixelColor(255, 0, 0))
-            Board.RGB.show()
-        elif color == "green":
-            Board.RGB.setPixelColor(0, Board.PixelColor(0, 255, 0))
-            Board.RGB.setPixelColor(1, Board.PixelColor(0, 255, 0))
-            Board.RGB.show()
-        elif color == "blue":
-            Board.RGB.setPixelColor(0, Board.PixelColor(0, 0, 255))
-            Board.RGB.setPixelColor(1, Board.PixelColor(0, 0, 255))
-            Board.RGB.show()
-        else:
-            Board.RGB.setPixelColor(0, Board.PixelColor(0, 0, 0))
-            Board.RGB.setPixelColor(1, Board.PixelColor(0, 0, 0))
-            Board.RGB.show()
 
     def getAreaMaxContour(contours):
         contour_area_temp = 0
@@ -132,10 +105,6 @@ class ColorTracking():
         size = self.size
         frame_resize = cv2.resize(img, size, interpolation=cv2.INTER_NEAREST)
         frame_gb = cv2.GaussianBlur(frame_resize, (11, 11), 11)
-        #f an object is detected in a certain area, the area will be detected until there is no object.
-        # if self.get_roi and self.start_pick_up:
-        #     get_roi = False
-            #frame_gb = getMaskROI(frame_gb, roi, size)  #################  
         
         frame_lab = cv2.cvtColor(frame_gb, cv2.COLOR_BGR2LAB)  #Covert the image to LAB space
         self.pick_block_to_get(frame_lab) #Find the maximum contourFind the maximum contour
@@ -149,10 +118,8 @@ class ColorTracking():
 
             img_centerx, img_centery = getCenter(rect, roi, size, square_length)  #Get the center coordinates of the wooden block
             self.world_x, self.world_y = convertCoordinate(img_centerx, img_centery, size) #Convert to real world coordinates
-        #return self.world_x, self.world_y
+
             self.display_info (img)
-            
-            #print('finished')
         return img
         
     def display_info(self,img):
@@ -188,26 +155,4 @@ class ColorTracking():
                         self.selected_color = i
                 except:
                     continue
-
-
-    # def judgement(self,world_x,world_y,distance):
-    #     if distance < 0.5:
-    #                 count += 1
-    #                 center_list.extend((world_x, world_y))
-    #                 if start_count_t1:
-    #                     start_count_t1 = False
-    #                     t1 = time.time()
-    #                 if time.time() - t1 > 1:
-    #                     self.rotation_angle = self.rect[2] 
-    #                     start_count_t1 = True
-    #                     self.world_X, self.world_Y = np.mean(np.array(center_list).reshape(count, 2), axis=0)
-    #                     center_list = []
-    #                     count = 0
-    #                     self.start_pick_up = True
-    #     else:
-    #         t1 = time.time()
-    #         start_count_t1 = True
-    #         center_list = []
-    #         count = 0 
-   
 

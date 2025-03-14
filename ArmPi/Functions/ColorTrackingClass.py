@@ -11,7 +11,7 @@ from ArmIK.Transform import *
 from ArmIK.ArmMoveIK import *
 import HiwonderSDK.Board as Board
 from CameraCalibration.CalibrationConfig import *
-# import numpy as np
+
 
 if sys.version_info.major == 2:
     print('Please run this program with python3!')
@@ -139,10 +139,6 @@ class ColorTracking():
         size = self.size
         frame_resize = cv2.resize(img, size, interpolation=cv2.INTER_NEAREST)
         frame_gb = cv2.GaussianBlur(frame_resize, (11, 11), 11)
-        #f an object is detected in a certain area, the area will be detected until there is no object.
-        # if self.get_roi and self.start_pick_up:
-        #     get_roi = False
-            #frame_gb = getMaskROI(frame_gb, roi, size)  #################  
         
         frame_lab = cv2.cvtColor(frame_gb, cv2.COLOR_BGR2LAB)  #Covert the image to LAB space
         self.pick_block_to_get(frame_lab) #Find the maximum contourFind the maximum contour
@@ -158,7 +154,7 @@ class ColorTracking():
             self.world_x, self.world_y = convertCoordinate(img_centerx, img_centery, size) #Convert to real world coordinates
 
             self.display_info (img)
-            #self.judgement(self.world_x,self.world_y,self.distance)
+            
         return img
         
     def display_info(self,img):
@@ -229,46 +225,34 @@ class ColorTracking():
         print('started')
         self.world_X = self.world_x
         self.world_Y = self.world_y
-        #self.judgement(self.world_x,self.world_y,self.distance)
-        #self.rotation_angle = self.rect[2] 
-        #self.rotation_angle = 0
+    
         Board.setBusServoPulse(1, self.servo1 - 280, 500)  #Claws open
         print('claws open')
         # Calculate the angle the gripper needs to rotate
         self.servo2_angle = getAngle(self.world_X, self.world_Y, self.rotation_angle)
-        #print(self.servo2_angle)
+
         Board.setBusServoPulse(2, self.servo2_angle, 500)
         time.sleep(0.8)
-        # if not __isRunning:
-        #     continue
+      
         self.AK.setPitchRangeMoving((self.world_X, self.world_Y, 2), -90, -90, 0, 1000)  #lower height
         time.sleep(2)
-        # if not __isRunning:
-        #     continue
+ 
         Board.setBusServoPulse(1, self.servo1, 500)  # Gripper closed
         time.sleep(1)
-        # if not __isRunning:
-        #     continue
+       
         Board.setBusServoPulse(2, 500, 500)
         self.AK.setPitchRangeMoving((self.world_X, self.world_Y, 12), -90, -90, 0, 1000)  # Robotic arm raised
         time.sleep(1)
     
 
     def find_where_block_goes (self):
-        #result = self.AK.setPitchRangeMoving((self.coordinate[detect_color][0], self.coordinate[detect_color][1], 12), -90, -90, 0)
         result = self.AK.setPitchRangeMoving((self.coordinate[self.selected_color][0], self.coordinate[self.selected_color][1], 12), -90, -90, 0)   
         time.sleep(result[2]/1000)
         
-        # if not __isRunning:
-        #     continue
-        #servo2_angle = getAngle(self.coordinate[detect_color][0], self.coordinate[detect_color][1], -90)
         self.servo2_angle = getAngle(self.coordinate[self.selected_color][0], self.coordinate[self.selected_color][1], -90)
         Board.setBusServoPulse(2, self.servo2_angle, 500)
         time.sleep(0.5)
 
-        # if not __isRunning:
-        #     continue
-        #self.AK.setPitchRangeMoving((self.coordinate[detect_color][0], self.coordinate[detect_color][1], self.AKcoordinate[detect_color][2] + 3), -90, -90, 0, 500)
         self.AK.setPitchRangeMoving((self.coordinate[self.selected_color][0], self.coordinate[self.selected_color][1], self.coordinate[self.selected_color][2] + 3), -90, -90, 0, 500)
         time.sleep(0.5)
         
@@ -286,9 +270,7 @@ class ColorTracking():
         Board.setBusServoPulse(1, self.servo1 - 200, 500)  #Open the claws and put the object down
         time.sleep(0.8)
         
-        # if not __isRunning:
-        #     continue                    
-        #self.AK.setPitchRangeMoving((self.coordinate[detect_color][0], self.coordinate[detect_color][1], 12), -90, -90, 0, 800)
+
         self.AK.setPitchRangeMoving((self.coordinate[self.selected_color][0], self.coordinate[self.selected_color][1], 12), -90, -90, 0, 800)
         time.sleep(0.8)
 
